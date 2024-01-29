@@ -14,6 +14,7 @@ const cart_slice = createSlice({
       const exist_item = state.cart_items.find(
         (cart_item) => cart_item._id === item._id
       );
+      console.log("exist_item", item)
       if (exist_item) {
         state.cart_items = state.cart_items.map((cart_item) =>
           cart_item._id === exist_item._id ? item : cart_item

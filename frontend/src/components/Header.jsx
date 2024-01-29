@@ -20,9 +20,11 @@ const Header = () => {
               <LinkContainer to="/cart">
                 <Nav.Link>
                   <FaBagShopping /> Cart{" "}
-                  <Badge bg="light" text="dark">
-                    {cart_items.reduce((acc, item) => acc + item.quantity, 0)}
-                  </Badge>
+                  {cart_items.length > 0 && (
+                    <Badge bg="light" text="dark">
+                      {cart_items.reduce((acc, item) => acc + item.quantity, 0)}
+                    </Badge>
+                  )}
                 </Nav.Link>
               </LinkContainer>
               <LinkContainer to="/login">

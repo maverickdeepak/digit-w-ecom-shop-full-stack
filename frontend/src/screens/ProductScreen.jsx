@@ -31,7 +31,7 @@ const ProductScreen = () => {
 
   const add_to_cart_handler = () => {
     dispatch(add_to_cart({ ...productDetails?.data, quantity }));
-    navigate("/cart");
+    // navigate("/cart");
   };
 
   return (
