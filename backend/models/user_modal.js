@@ -1,5 +1,5 @@
-import mongoose from 'mongoose';
-import bcrypt from 'bcryptjs'
+import mongoose from "mongoose";
+import bcrypt from "bcryptjs";
 
 const userSchema = mongoose.Schema(
   {
@@ -28,9 +28,18 @@ const userSchema = mongoose.Schema(
 );
 
 userSchema.methods.match_password = async function (entered_password) {
-  return bcrypt.compare(entered_password, this.password)
-}
+  return bcrypt.compare(entered_password, this.password);
+};
 
-const User = mongoose.model('User', userSchema);
+userSchema.pre("save", async function (next) {
+  // Only run this function if password was moddified (not on other update functions)
+  if (!this.isModified("password")) {
+    next();
+  }
+  const salt = await bcrypt.genSalt(10);
+  this.password = bcrypt.hash(this.password, salt);
+});
+
+const User = mongoose.model("User", userSchema);
 
 export default User;
