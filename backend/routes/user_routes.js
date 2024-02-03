@@ -1,5 +1,6 @@
 import express from "express";
 const routes = express.Router();
+import { protect, admin } from "../middleware/auth_middleware.js";
 
 import {
   auth_user,
@@ -13,10 +14,17 @@ import {
   update_user,
 } from "../controllers/user_controller.js";
 
-routes.route("/").post(register_user).get(get_all_users);
+routes.route("/").post(register_user).get(protect, admin, get_all_users);
 routes.post("/logout", logout_user);
-routes.post("/login", auth_user);
-routes.route("/profile").get(get_user_profile).put(update_user_profile);
-routes.route("/:id").delete(delete_user).get(get_user_by_id).put(update_user);
+routes.post("/auth", auth_user);
+routes
+  .route("/profile")
+  .get(protect, get_user_profile)
+  .put(protect, update_user_profile);
+routes
+  .route("/:id")
+  .delete(protect, admin, delete_user)
+  .get(protect, admin, get_user_by_id)
+  .put(protect, admin, update_user);
 
 export default routes;

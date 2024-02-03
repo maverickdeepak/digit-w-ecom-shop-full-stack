@@ -1,28 +1,41 @@
 import async_handler from "../middleware/async_handler.js";
 import User from "../models/user_modal.js";
+import jwt from "jsonwebtoken";
 
 /**
  * @desc Auth User & get token
- * @route POST /api/users/login
+ * @route POST /api/users/auth
  * @access Public
  */
 
 const auth_user = async_handler(async (req, res) => {
   const { email, password } = req.body;
-  
+
   const user = await User.findOne({ email: email });
   const is_password_matched = await user.match_password(password);
 
   if (user && is_password_matched) {
+    const token = jwt.sign({ user_id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "30d", // 30 days
+    });
+
+    // set JWT token to HTTP only cookies
+    res.cookie("jwt", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV !== "development",
+      sameSite: "strict",
+      maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
+    });
+
     res.json({
-    status: "success",
-    data: {
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-      isAdmin: user.isAdmin
-    }
-  });
+      status: "success",
+      data: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        isAdmin: user.isAdmin,
+      },
+    });
   } else {
     res.status(401);
     throw new Error("Invalid email or password.");
@@ -74,13 +87,14 @@ const login_user = async_handler(async (req, res) => {
  */
 
 const logout_user = async_handler(async (req, res) => {
-  res.send("logout user");
-  // const users = await User.find({});
-  // res.json({
-  //   status: "success",
-  //   length: users.length + 1,
-  //   data: users,
-  // });
+  res.cookie('jwt', '', {
+    httpOnly: true,
+    expires: new Date(0)
+  });
+  res.status(200).json({
+    status: "success",
+    message: 'Logged out successfully.'
+  });
 });
 
 /**
