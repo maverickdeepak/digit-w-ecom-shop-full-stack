@@ -6,6 +6,7 @@ import { not_found, error_handler } from "./middleware/error_middleware.js";
 const PORT = process.env.PORT || 8080;
 
 import product_routes from "./routes/product_routes.js";
+import user_routes from './routes/user_routes.js'
 
 connectDB(); // Connect to DB
 
@@ -16,6 +17,7 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/products", product_routes);
+app.use("/api/users", user_routes);
 
 app.use(not_found);
 app.use(error_handler);

@@ -12,18 +12,26 @@ import {
 } from "react-bootstrap";
 import { FaRegTrashCan } from "react-icons/fa6";
 import Message from "../components/Message";
-import { add_to_cart } from "../slices/cart_slice";
+import { add_to_cart, remove_item_from_cart } from "../slices/cart_slice";
 
 const CartScreen = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
   const cart = useSelector((state) => state.cart);
   const { cart_items } = cart;
 
-  const add_to_cart_handler = (item, value) => {
-    console.log(item, value);
-    dispatch(add_to_cart({ ...item, value }));
+  const add_to_cart_handler = (product, quantity) => {
+    dispatch(add_to_cart({ ...product, quantity }));
   };
+
+  const remove_item_handler = (id) => {
+    dispatch(remove_item_from_cart(id));
+  };
+
+  const checkout_handler = () => {
+    navigate(`/login?redirect=/shipping`)
+  }
 
   return (
     <Row>
@@ -36,7 +44,6 @@ const CartScreen = () => {
         ) : (
           <ListGroup variant="flush">
             {cart_items.map((item) => {
-                console.log("item.quantity", item.quantity)
               return (
                 <ListGroup.Item key={item._id}>
                   <Row>
@@ -65,7 +72,11 @@ const CartScreen = () => {
                       </Form.Control>
                     </Col>
                     <Col md={2}>
-                      <Button type="button" variant="light">
+                      <Button
+                        type="button"
+                        variant="light"
+                        onClick={() => remove_item_handler(item._id)}
+                      >
                         <FaRegTrashCan />
                       </Button>
                     </Col>
@@ -95,6 +106,7 @@ const CartScreen = () => {
                 type="button"
                 className="btn btn-block"
                 disabled={cart_items.length === 0}
+                onClick={checkout_handler}
               >
                 Proceed to Checkout
               </Button>
