@@ -5,6 +5,7 @@ import { FaArrowRight } from "react-icons/fa6";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { save_shipping_address } from "../slices/cart_slice";
+import CheckoutSteps from "../components/CheckoutSteps";
 
 const ShippingScreen = () => {
   const cart = useSelector((state) => state.cart);
@@ -28,6 +29,7 @@ const ShippingScreen = () => {
 
   return (
     <FormContainer>
+      <CheckoutSteps step1 step2 />
       <h2>Shipping</h2>
       <Form onSubmit={submitHandler}>
         <Form.Group controlId="address" className="my-2">

@@ -41,6 +41,7 @@ const auth_user = async_handler(async (req, res) => {
 const register_user = async_handler(async (req, res) => {
   const { name, email, password } = req.body;
   const user_exist = await User.findOne({ email: email });
+  
   if (user_exist) {
     res.status(400).json({
       status: "failed",

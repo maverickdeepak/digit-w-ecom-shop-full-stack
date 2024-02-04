@@ -34,10 +34,14 @@ const cart_slice = createSlice({
       state.shipping_address = action.payload;
       return update_cart(state);
     },
+    save_payment_method: (state, action) => {
+      state.payment_method = action.payload
+      return update_cart(state)
+    }
   },
 });
 
-export const { add_to_cart, remove_item_from_cart, save_shipping_address } =
+export const { add_to_cart, remove_item_from_cart, save_shipping_address, save_payment_method } =
   cart_slice.actions;
 
 export default cart_slice.reducer;
